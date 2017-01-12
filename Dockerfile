@@ -1,5 +1,7 @@
 FROM php:7.0-apache
 
+ENV WWW_ROOT /var/www/html
+
 # Install required dep
 RUN set -xe && \
         apt-get update && apt-get install --no-install-recommends --no-install-suggests -y \
@@ -23,3 +25,15 @@ RUN set -xe && \
 RUN set -xe && \
         a2enmod rewrite && \
         sed -i "s/DocumentRoot.*/DocumentRoot \/var\/www\/html\/public/g" /etc/apache2/sites-enabled/000-default.conf
+
+
+WORKDIR ${WWW_ROOT}
+
+# Install application
+COPY ./blog/composer.json .
+COPY ./blog/composer.lock .
+COPY ./blog/.env.example .
+RUN composer install --no-dev --optimize-autoloader
+
+# Copy production
+COPY ./blog .
