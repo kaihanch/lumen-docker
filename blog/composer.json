@@ -28,7 +28,10 @@
     "scripts": {
         "post-root-package-install": [
             "php -r \"copy('.env.example', '.env');\""
-        ]
+        ],
+       "post-install-cmd": [
+            "php -r \"if (!is_file('.env')) copy('.env.example', '.env');\""
+       ]
     },
     "minimum-stability": "dev",
     "prefer-stable": true
